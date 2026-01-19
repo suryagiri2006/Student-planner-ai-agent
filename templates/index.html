@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Planner AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h1>Student Planner AI</h1>
+
+    <!-- Add Task Section -->
+    <section class="card">
+      <h2>Add a Task</h2>
+      <form method="POST" action="/">
+        <div class="form-row">
+          <label>Title*</label>
+          <input type="text" name="title" required />
+        </div>
+
+        <div class="form-row">
+          <label>Subject</label>
+          <input type="text" name="subject" />
+        </div>
+
+        <div class="form-row">
+          <label>Due date</label>
+          <input type="date" name="due_date" />
+        </div>
+
+        <div class="form-row">
+          <label>Importance (1–5)</label>
+          <input type="number" name="importance" min="1" max="5" value="3" />
+        </div>
+
+        <div class="form-row">
+          <label>Estimated hours</label>
+          <input type="number" step="0.5" name="duration_hours" value="1" />
+        </div>
+
+        <div class="form-row">
+          <label>Notes</label>
+          <textarea name="notes" rows="2"></textarea>
+        </div>
+
+        <button type="submit">Save Task</button>
+      </form>
+    </section>
+
+    <!-- Task List Section -->
+    <section class="card">
+      <h2>Your Tasks</h2>
+      {% if tasks %}
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Subject</th>
+              <th>Due</th>
+              <th>Importance</th>
+              <th>Hours</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in tasks %}
+              <tr>
+                <td>{{ t['title'] }}</td>
+                <td>{{ t['subject'] }}</td>
+                <td>{{ t['due_date'] }}</td>
+                <td>{{ t['importance'] }}</td>
+                <td>{{ t['duration_hours'] }}</td>
+                <td>{{ t['notes'] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No tasks yet. Add some above.</p>
+      {% endif %}
+    </section>
+
+    <!-- AI Plan Section -->
+    <section class="card">
+      <h2>Generate 7-Day Study Plan</h2>
+      <div class="form-row">
+        <label>Study time / constraints</label>
+        <textarea
+          id="extra-info"
+          rows="3"
+          placeholder="Example: 2 hours on weekdays after 6 pm, 3 hours on Sunday."
+        ></textarea>
+      </div>
+
+      <button type="button" id="generate-plan-btn">Generate Plan</button>
+
+      <div id="loading" style="display: none;">Generating plan...</div>
+
+      <h3>Your AI Study Plan</h3>
+      <pre id="plan-output"></pre>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
